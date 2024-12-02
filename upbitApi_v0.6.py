@@ -84,12 +84,12 @@ class MainWindow(QMainWindow, form_class):  # slot 클래스
     def combobox_active(self):  # 콤보박스의 메뉴가 변경되었을 때 호출되는 함수
         selected_ticker = self.ticker_combobox.currentText()  # 현재 콤보박스에서선택된 메뉴 텍스트 가져오기
         self.ticker_label.setText(selected_ticker)
-        self.upbitApi.close()  # 무한루프 종료
+        self.upbitApi.close()  # 무한루프 종료 -> 시그널 클래스 객체가 삭제
         self.upbitApi = UpbitApi(f"KRW-{selected_ticker}")  # 시그널 클래스로 객체 생성
         self.upbitApi.coinDataSent.connect(self.printCoinData) # 시그널 함수와 슬롯 함수를 연결
         self.upbitApi.start()
 
-    def printCoinData(self, btcPrice):  # slot 메소드
+    def printCoinData(self, coinPrice):  # slot 메소드
         # print(f"비트코인 현재가격은 {btcPrice}")
         
         # if  btcPrice >= 134620000:
@@ -97,7 +97,7 @@ class MainWindow(QMainWindow, form_class):  # slot 클래스
         # if  btcPrice < 134620000:
         #     self.alarm_label.setText("매수!!!")
 
-        self.price_label.setText(f"{btcPrice:,.0f}")
+        self.price_label.setText(f"{coinPrice:,.0f}")
 
 app = QApplication(sys.argv)
 win = MainWindow()  # 이렇게 하면 화면에 나타났다가 사라짐. 아래를 해주면 나타났다가 엑스를 누를 때 까지 실행 됨
